@@ -1,4 +1,5 @@
 const std = @import("std");
+const glfw = @import("build/glfw.zig");
 
 pub fn build(b: *std.build.Builder) void {
     // Standard target options allows the person running `zig build` to choose
@@ -12,6 +13,12 @@ pub fn build(b: *std.build.Builder) void {
     const mode = b.standardReleaseOptions();
 
     const exe = b.addExecutable("StarsV5", "src/main.zig");
+    exe.linkLibC();
+    exe.addIncludePath("3rdparty/glfw/include");
+    exe.linkLibrary(glfw.buildglfw(b, &target, &mode));
+    exe.linkSystemLibrary("gdi32");
+    exe.linkSystemLibrary("user32");
+    exe.linkSystemLibrary("kernel32");
     exe.setTarget(target);
     exe.setBuildMode(mode);
     exe.install();

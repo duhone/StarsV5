@@ -1,19 +1,24 @@
 const std = @import("std");
 
+const glfw = @cImport({
+    @cInclude("GLFW/glfw3.h");
+});
+
+export fn glfwErrorCallback(err: c_int, description: [*c]const u8) void {
+    std.log.err("GLFW Error: {} {s}\n", .{err, description});
+}
+
+const AppErrors = error{
+    FailedToInitGLFW
+};
+
 pub fn main() !void {
-    // Prints to stderr (it's a shortcut based on `std.io.getStdErr()`)
-    std.debug.print("All your {s} are belong to us.\n", .{"codebase"});
+    _ = glfw.glfwSetErrorCallback(glfwErrorCallback);
 
-    // stdout is for the actual output of your application, for example if you
-    // are implementing gzip, then only the compressed bytes should be sent to
-    // stdout, not any debugging messages.
-    const stdout_file = std.io.getStdOut().writer();
-    var bw = std.io.bufferedWriter(stdout_file);
-    const stdout = bw.writer();
-
-    try stdout.print("Run `zig build test` to run the tests.\n", .{});
-
-    try bw.flush(); // don't forget to flush!
+    if (glfw.glfwInit() == glfw.GL_FALSE) {
+        std.log.warn("Failed to initialize GLFW\n", .{});
+        return AppErrors.FailedToInitGLFW;
+    }
 }
 
 test "simple test" {
