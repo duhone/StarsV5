@@ -16,6 +16,8 @@ pub fn build(b: *std.build.Builder) !void {
     const vulkanIncludePath = try std.fmt.allocPrint(allocator, "{s}/include", .{vulkanSDKPath});
     defer allocator.free(vulkanIncludePath);
     try stdout.print("VULKAN SDK {s}\n", .{vulkanIncludePath});
+    const vulkanLibraryPath = try std.fmt.allocPrint(allocator, "{s}/Lib", .{vulkanSDKPath});
+    defer allocator.free(vulkanLibraryPath);
 
     // Standard target options allows the person running `zig build` to choose
     // what target to build for. Here we do not override the defaults, which
@@ -31,11 +33,12 @@ pub fn build(b: *std.build.Builder) !void {
     exe.linkLibC();
     exe.addIncludePath("3rdparty/glfw/include");
     exe.addIncludePath(vulkanIncludePath);
+    exe.addLibraryPath(vulkanLibraryPath);
     exe.linkLibrary(glfw.buildglfw(b, &target, &mode));
     exe.linkSystemLibrary("gdi32");
     exe.linkSystemLibrary("user32");
     exe.linkSystemLibrary("kernel32");
-    // exe.linkSystemLibrary("vulkan-1");
+    exe.linkSystemLibrary("vulkan-1");
     exe.setTarget(target);
     exe.setBuildMode(mode);
     exe.install();
