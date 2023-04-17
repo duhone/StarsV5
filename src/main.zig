@@ -50,17 +50,17 @@ pub fn main() !void {
     glfw.glfwWindowHint(glfw.GLFW_REFRESH_RATE, videoMode.refreshRate);
     glfw.glfwWindowHint(glfw.GLFW_CLIENT_API, glfw.GLFW_NO_API);
 
-    var extensionCount: c_uint = 0;
-    var extensions: [*c][*c]const u8 = glfw.glfwGetRequiredInstanceExtensions(&extensionCount);
-    vulkanDevice.initVulkan(extensions, extensionCount) catch {
-        std.log.err("Failed to initialize vulkan\n", .{});
-        return AppErrors.FailedToInit;
-    };
-
     var window = glfw.glfwCreateWindow(videoMode.width, videoMode.height, "Stars V5", primaryMonitor, null);
     if (window == null) {
         glfw.glfwTerminate();
     }
+
+    var extensionCount: c_uint = 0;
+    var extensions: [*c][*c]const u8 = glfw.glfwGetRequiredInstanceExtensions(&extensionCount);
+    vulkanDevice.initVulkan(extensions, extensionCount, window) catch {
+        std.log.err("Failed to initialize vulkan\n", .{});
+        return AppErrors.FailedToInit;
+    };
 
     _ = glfw.glfwSetKeyCallback(window, glfwKeyCallback);
 
@@ -68,6 +68,7 @@ pub fn main() !void {
         glfw.glfwPollEvents();
     }
 
+    vulkanDevice.deInitVulkan();
     glfw.glfwTerminate();
 }
 
