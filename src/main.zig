@@ -40,7 +40,8 @@ pub fn main() !void {
     glfw.glfwWindowHint(glfw.GLFW_GREEN_BITS, videoMode.greenBits);
     glfw.glfwWindowHint(glfw.GLFW_BLUE_BITS, videoMode.blueBits);
     glfw.glfwWindowHint(glfw.GLFW_REFRESH_RATE, videoMode.refreshRate);
-
+    glfw.glfwWindowHint(glfw.GLFW_CLIENT_API, glfw.GLFW_NO_API);
+    
     var window = glfw.glfwCreateWindow(videoMode.width, videoMode.height, "Stars V5", primaryMonitor, null);
     if(window == null){
         glfw.glfwTerminate();

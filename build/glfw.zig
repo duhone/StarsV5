@@ -7,6 +7,7 @@ pub fn buildglfw(b: *std.build.Builder, target: *const std.zig.CrossTarget, mode
         "-fno-stack-protector",
 
         "-D_STDIO_DEFINED",
+        // "-DGLFW_INCLUDE_VULKAN",
         "-D_GLFW_WIN32",
         "-D_UNICODE",
         "-DUNICODE",
