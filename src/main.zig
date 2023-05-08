@@ -26,6 +26,8 @@ pub fn glfwKeyCallback(window: ?*glfw.GLFWwindow, key: c_int, scancode: c_int, a
 }
 
 pub fn main() !void {
+    @setFloatMode(.Optimized);
+
     _ = glfw.glfwSetErrorCallback(glfwErrorCallback);
 
     if (glfw.glfwInit() == glfw.GL_FALSE) {
